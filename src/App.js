@@ -2,32 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import RoverPhoto from './components/RoverPhoto';
 import Button from './components/Button';
-
-const camerasByRoverList = {
-  curiosity: [
-    "FHAZ",
-    "RHAZ",
-    "MAST",
-    "CHEMCAM",
-    "MAHLI",
-    "MARDI",
-    "NAVCAM"
-  ],
-  opportunity: [
-    "FHAZ",
-    "RHAZ",
-    "NAVCAM",
-    "PANCAM",
-    "MINITES"
-  ],
-  spirit: [
-    "FHAZ",
-    "RHAZ",
-    "NAVCAM",
-    "PANCAM",
-    "MINITES"
-  ]
-};
+import camerasByRoverList from './camerasByRoverList';
 
 const App = () => {
   const [ dataRetrieved, setDataRetrieved ] = useState( [] );
