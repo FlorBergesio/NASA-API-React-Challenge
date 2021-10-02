@@ -45,18 +45,25 @@ const App = () => {
   }, [ fetchData ] );
 
   useEffect( () => {
+    // Reset parameters on rover change
     // Change available cameras
     setAvailableCameras( camerasByRoverList[rover] );
-  }, [ rover ] );
-
-  const changeRover = ( new_rover ) => {
-    setRover( new_rover );
+    // Reset query
     setQuery( {
       query: 'latest_photos',
       sol: '',
       camera: '',
       earth_date: ''
     } );
+  }, [ rover ] );
+
+  useEffect( () => {
+    // Reset pagination on query change
+    setPagination(1);
+  }, [ query ] );
+
+  const changeRover = ( new_rover ) => {
+    setRover( new_rover );
   };
 
   const changeQuery = ( new_query ) => {
@@ -90,7 +97,7 @@ const App = () => {
       ...current,
       ...modified_query,
       query: 'photos'
-    }) ); 
+    }) );
   };
 
   return (
@@ -177,6 +184,8 @@ const App = () => {
                 <p>Camera: { query.camera ? query.camera : "No info" }</p>
                 <p>Sol: { query.sol ? query.sol : "No info" }</p>
                 <p>Earth date: { query.earth_date ? query.earth_date : "No info" }</p>
+                <p>Page number: { pagination }</p>
+                <p>Total results for this query: { dataRetrieved ? dataRetrieved.length : "0" }</p>
               </>
             )
         }
