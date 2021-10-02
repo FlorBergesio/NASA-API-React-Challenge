@@ -20,6 +20,9 @@ Optional:
 - The NASA API has an hourly limit of 1000 requests per hour. Please consider using your own API key if the demo api key has reached it's limit.
 - There are Four Mars Rovers to date: Perseverance, Curiosity, Opportunity, and Spirit. But for the scope of this challenge, only the last three will be queried.
 - Each rover has its own set of photos stored in the database, which can be queried separately.
+- Latest photos by rover are not paginated.
+- Photos filtered by camera are paginated ( 25 photos per call ).
+
 
 
 ---
