@@ -17,8 +17,8 @@ Optional:
 
 ## Observations
 - This project was bootstrapped with Create React App, so it already has a linter (eslint@7.32.0).
-- The NASA API has an hourly limit of 1000 requests per hour.
-- There are three Mars Rovers to date: Curiosity, Opportunity, and Spirit.
+- The NASA API has an hourly limit of 1000 requests per hour. Please consider using your own API key if the demo api key has reached it's limit.
+- There are Four Mars Rovers to date: Perseverance, Curiosity, Opportunity, and Spirit. But for the scope of this challenge, only the last three will be queried.
 - Each rover has its own set of photos stored in the database, which can be queried separately.
 
 
