@@ -41,16 +41,25 @@ const App = () => {
     query: 'photos',
     filters: 'sol=1000'
   }); */
-  const [ query, setQuery ] = useState({
+  /* const [ query, setQuery ] = useState({
     query: 'latest_photos',
     filters: ''
+  }); */
+  const [ query, setQuery ] = useState({
+    query: 'latest_photos',
+    sol: '',
+    camera: '',
+    earth_date: ''
   });
 
   const fetchData = useCallback( async () => {
-    const fetch_url = `${process.env.REACT_APP_NASA_API_URL}/${rover}/${query.query}?${query.filters !== "" ? ( query.filters + '&' ) : "" }api_key=${process.env.REACT_APP_NASA_API_KEY}`;
+    //const fetch_url = `${process.env.REACT_APP_NASA_API_URL}/${rover}/${query.query}?${query.filters !== "" ? ( query.filters + '&' ) : "" }api_key=${process.env.REACT_APP_NASA_API_KEY}`;
+    const fetch_url = `${process.env.REACT_APP_NASA_API_URL}/${rover}/${query.query}?${query.sol !== "" ? ( 'sol=' + query.sol + '&' ) : "" }${query.earth_date !== "" ? ( 'earth_date=' + query.earth_date + '&' ) : "" }${query.camera !== "" ? ( 'camera=' + query.camera + '&' ) : "" }api_key=${process.env.REACT_APP_NASA_API_KEY}`;
+    
     const response = await fetch( fetch_url );
     const dataFromAPI = await response.json();
-    console.log(dataFromAPI);
+    console.log(query);
+    console.log(fetch_url);
     
     if ( !!dataFromAPI.error ) {
       setError("Demo Api key has reached the limit. Please use a different key");
@@ -79,12 +88,26 @@ const App = () => {
     setRover( new_rover );
     setQuery( {
       query: 'latest_photos',
-      filters: ''
+      sol: '',
+      camera: '',
+      earth_date: ''
     } );
   };
 
   const changeQuery = ( new_query ) => {
-    setQuery( new_query );
+    console.log(query, new_query)
+    if ( new_query.sol === undefined && query.sol === "" && new_query.earth_date === undefined && query.earth_date === "" ) {
+      setQuery( ( current ) => ({ 
+        ...current,
+        ...new_query,
+        sol: latestSolByRover
+      }) );
+    } else {
+      setQuery( ( current ) => ({ 
+        ...current,
+        ...new_query
+      }) );
+    }
   };
 
   return (
@@ -122,7 +145,7 @@ const App = () => {
               <Button
                 handleClick={ () => changeQuery( {
                   query: 'photos',
-                  filters: `sol=${latestSolByRover}&camera=${item}`
+                  camera: item
                 } ) }
                 text={ item }
               />
@@ -145,7 +168,14 @@ const App = () => {
         {
           query.query === "latest_photos" 
           ? <p>You are looking at the latest photos of the rover.</p>
-          : <p>You are looking at every photo that matches the query: {query.filters}</p>
+          : (
+              <>
+                <p>You are looking at every photo that matches the query: </p>
+                <p>Camera: { query.camera ? query.camera : "No info" }</p>
+                <p>Sol: { query.sol ? query.sol : "No info" }</p>
+                <p>Earth date: { query.earth_date ? query.earth_date : "No info" }</p>
+              </>
+            )
         }
       </div>
 
