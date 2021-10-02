@@ -10,6 +10,7 @@ const App = () => {
   const [ availableCameras, setAvailableCameras ] = useState( camerasByRoverList.curiosity );
   const [ latestSolByRover, setLatestSolByRover ] = useState();
 
+  const [ pagination, setPagination ] = useState( 1 );
   const [ error, setError ] = useState();
 
   const [ query, setQuery ] = useState({
@@ -110,7 +111,7 @@ const App = () => {
         />
         <Button
           handleClick={ () => changeRover( "opportunity" ) }
-          text="Opportunity "
+          text="Opportunity"
         />
         <Button
           handleClick={ () => changeRover( "spirit" ) }
@@ -181,22 +182,45 @@ const App = () => {
         }
       </div>
 
-      <div className="photos-by-rover">
-        {
-          ( !!dataRetrieved && dataRetrieved.length > 0 ) 
-          ? dataRetrieved.map( ( item ) => {
-              return (
-                <RoverPhoto
-                  key={ item.id }
-                  item={ item }
+      {
+        ( !!dataRetrieved && dataRetrieved.length > 0 ) 
+        ? (
+          <>
+            <div className="btn-pagination">
+              { pagination > 1 &&
+                <Button
+                  handleClick={ () => setPagination( ( current ) => ( current - 1 ) ) }
+                  text="Previous page"
                 />
-              );
-            })
-          : <p>There are no results available for this particular query.</p>
-        }
+              }
+              { dataRetrieved.length > (pagination*25) &&
+                <Button
+                  handleClick={ () => setPagination( ( current ) => ( current + 1 ) ) }
+                  text="Next page"
+                />
+              }
+            </div>
 
-      </div>
+            <div className="photos-by-rover">
+            {
+              dataRetrieved.map( ( item, key ) => {
+                  if ( key < (25*pagination) && key >= (25*(pagination - 1))  ) {
+                    return (
+                      <RoverPhoto
+                        key={ item.id }
+                        item={ item }
+                      />
+                    );
+                  }
+                })
+            }
 
+          </div>
+          </>
+        )
+        : <p>There are no results available for this particular query.</p>
+      }
+      
     </div>
   );
 }
