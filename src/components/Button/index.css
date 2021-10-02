@@ -1,0 +1,17 @@
+.button{
+    color: #fff;
+	text-transform: uppercase;
+	background: #283777;
+	padding: 20px;
+	display: inline-block;
+	border: none;
+	transition: all 0.4s ease 0s;
+    margin: 10px;
+}
+
+.button:hover{
+    background: #2b41a0;
+	letter-spacing: 1px;
+	box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
+	transition: all 0.4s ease 0s;
+}
