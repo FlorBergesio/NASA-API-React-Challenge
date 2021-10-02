@@ -11,3 +11,10 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.photos-by-rover {
+  padding: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  justify-items: center;
+}

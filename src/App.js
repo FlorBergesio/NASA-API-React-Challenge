@@ -12,14 +12,6 @@ const App = () => {
 
   const [ error, setError ] = useState();
 
-  /* const [ query, setQuery ] = useState({
-    query: 'photos',
-    filters: 'sol=1000'
-  }); */
-  /* const [ query, setQuery ] = useState({
-    query: 'latest_photos',
-    filters: ''
-  }); */
   const [ query, setQuery ] = useState({
     query: 'latest_photos',
     sol: '',
@@ -28,13 +20,10 @@ const App = () => {
   });
 
   const fetchData = useCallback( async () => {
-    //const fetch_url = `${process.env.REACT_APP_NASA_API_URL}/${rover}/${query.query}?${query.filters !== "" ? ( query.filters + '&' ) : "" }api_key=${process.env.REACT_APP_NASA_API_KEY}`;
     const fetch_url = `${process.env.REACT_APP_NASA_API_URL}/${rover}/${query.query}?${query.sol !== "" ? ( 'sol=' + query.sol + '&' ) : "" }${query.earth_date !== "" ? ( 'earth_date=' + query.earth_date + '&' ) : "" }${query.camera !== "" ? ( 'camera=' + query.camera + '&' ) : "" }api_key=${process.env.REACT_APP_NASA_API_KEY}`;
     
     const response = await fetch( fetch_url );
     const dataFromAPI = await response.json();
-    console.log(query);
-    console.log(fetch_url);
     
     if ( !!dataFromAPI.error ) {
       setError("Demo Api key has reached the limit. Please use a different key");
@@ -70,19 +59,37 @@ const App = () => {
   };
 
   const changeQuery = ( new_query ) => {
-    console.log(query, new_query)
+    let modified_query = { ...new_query };
+    // If there is no info on the date, default to latest sol
     if ( new_query.sol === undefined && query.sol === "" && new_query.earth_date === undefined && query.earth_date === "" ) {
-      setQuery( ( current ) => ({ 
-        ...current,
-        ...new_query,
+      modified_query = {
+        ...modified_query,
         sol: latestSolByRover
-      }) );
+      };
     } else {
-      setQuery( ( current ) => ({ 
-        ...current,
-        ...new_query
-      }) );
+      // If there is info on the sol date, override every other date
+      if ( new_query.sol !== undefined) {
+        modified_query = {
+          ...modified_query,
+          sol: new_query.sol,
+          earth_date: ""
+        };
+      } else {
+        // If there is info on the earth date, override every other date
+        if ( new_query.earth_date !== undefined) {
+          modified_query = {
+            ...modified_query,
+            sol: "",
+            earth_date: new_query.earth_date
+          };
+        }
+      }
     }
+    setQuery( ( current ) => ({ 
+      ...current,
+      ...modified_query,
+      query: 'photos'
+    }) ); 
   };
 
   return (
@@ -119,7 +126,6 @@ const App = () => {
             return (
               <Button
                 handleClick={ () => changeQuery( {
-                  query: 'photos',
                   camera: item
                 } ) }
                 text={ item }
@@ -127,6 +133,27 @@ const App = () => {
             );
           })
         }
+      </div>
+
+      <div className="date-input-container">
+        <h2>Choose a date</h2>
+        <p>Sol</p>
+        <input
+          type="number" name="sol" min="1"
+          max={latestSolByRover}
+          value={query.sol}
+          onChange={ ( event ) => changeQuery( {
+            sol: event.target.value
+          } ) }
+        />
+        <p>Earth date</p>
+        <input
+          type="date" name="earth_date"
+          value={query.earth_date}
+          onChange={ ( event ) => changeQuery( {
+            earth_date: event.target.value
+          } ) }
+        />
       </div>
 
       <div className="query-info">
@@ -139,7 +166,7 @@ const App = () => {
             </div>
           )
         }
-        Selected rover: { rover }
+        Selected rover: { rover.charAt(0).toUpperCase() + rover.slice(1) }
         {
           query.query === "latest_photos" 
           ? <p>You are looking at the latest photos of the rover.</p>
@@ -155,8 +182,6 @@ const App = () => {
       </div>
 
       <div className="photos-by-rover">
-        <h2>{ rover.charAt(0).toUpperCase() + rover.slice(1) }</h2>
-
         {
           ( !!dataRetrieved && dataRetrieved.length > 0 ) 
           ? dataRetrieved.map( ( item ) => {
