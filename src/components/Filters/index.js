@@ -158,6 +158,11 @@ const Filters = ( { dataRetrieved, setDataRetrieved, setPagination } ) => {
 
             <h2>Filters</h2>
 
+            <Button
+                handleClick={ resetFilters }
+                text="Reset filters"
+            />
+
             <div>
                 <p><strong>Choose a rover</strong></p>
                 
@@ -208,11 +213,6 @@ const Filters = ( { dataRetrieved, setDataRetrieved, setPagination } ) => {
                     } ) }
                 />
             </div>
-
-            <Button
-                handleClick={ resetFilters }
-                text="Reset filters"
-            />
         </div>
     );
 };

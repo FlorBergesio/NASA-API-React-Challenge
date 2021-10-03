@@ -22,7 +22,6 @@ const App = () => {
           <Filters
             dataRetrieved={ dataRetrieved }
             setDataRetrieved={ setDataRetrieved }
-            pagination={ pagination }
             setPagination={ setPagination }
           />
         </aside>

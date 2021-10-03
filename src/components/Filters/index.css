@@ -1,6 +1,8 @@
 .Filters table {
     border-collapse: collapse;
     width: 100%;
+    max-width: 400px;
+    margin: auto;
 }
 
 .Filters table th, .Filters table td {
