@@ -1,6 +1,7 @@
 import './index.css';
 import { useState, useEffect, useCallback } from 'react';
 import camerasByRoverList from '../../camerasByRoverList';
+import Button from '../Button';
 
 const Filters = ( { dataRetrieved, setDataRetrieved, setPagination } ) => {
     const [ rover, setRover ] = useState( 'curiosity' );
@@ -43,12 +44,7 @@ const Filters = ( { dataRetrieved, setDataRetrieved, setPagination } ) => {
         // Change available cameras
         setAvailableCameras( camerasByRoverList[rover] );
         // Reset query
-        setQuery( {
-            query: 'latest_photos',
-            sol: '',
-            camera: '',
-            earth_date: ''
-        } );
+        resetFilters();
     }, [ rover ] );
 
     useEffect( () => {
@@ -92,6 +88,15 @@ const Filters = ( { dataRetrieved, setDataRetrieved, setPagination } ) => {
             ...modified_query,
             query: 'photos'
         }) );
+    };
+
+    const resetFilters = () => {
+        setQuery( {
+            query: 'latest_photos',
+            sol: '',
+            camera: '',
+            earth_date: ''
+        } );
     };
     
     return (
@@ -152,6 +157,7 @@ const Filters = ( { dataRetrieved, setDataRetrieved, setPagination } ) => {
             </div>
 
             <h2>Filters</h2>
+
             <div>
                 <p><strong>Choose a rover</strong></p>
                 
@@ -202,6 +208,11 @@ const Filters = ( { dataRetrieved, setDataRetrieved, setPagination } ) => {
                     } ) }
                 />
             </div>
+
+            <Button
+                handleClick={ resetFilters }
+                text="Reset filters"
+            />
         </div>
     );
 };
