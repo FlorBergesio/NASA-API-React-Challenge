@@ -18,3 +18,18 @@
   gap: 15px;
   justify-items: center;
 }
+
+.main-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.main-container aside {
+  padding: 15px;
+  flex: 1;
+}
+
+.main-container section {
+  padding: 15px;
+  flex: 2;
+}
