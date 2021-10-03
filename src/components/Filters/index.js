@@ -1,8 +1,8 @@
+import './index.css';
 import { useState, useEffect, useCallback } from 'react';
-import Button from '../Button';
 import camerasByRoverList from '../../camerasByRoverList';
 
-const Filters = ( { pagination, dataRetrieved, setDataRetrieved, setPagination } ) => {
+const Filters = ( { dataRetrieved, setDataRetrieved, setPagination } ) => {
     const [ rover, setRover ] = useState( 'curiosity' );
     const [ availableCameras, setAvailableCameras ] = useState( camerasByRoverList.curiosity );
     const [ latestSolByRover, setLatestSolByRover ] = useState();
@@ -98,7 +98,7 @@ const Filters = ( { pagination, dataRetrieved, setDataRetrieved, setPagination }
         <div className="Filters">
 
             <div className="query-info">
-                <p><strong>Query Info</strong></p>
+                <h2>Query Info</h2>
                 {
                     !!error &&
                     (
@@ -107,59 +107,82 @@ const Filters = ( { pagination, dataRetrieved, setDataRetrieved, setPagination }
                     </div>
                     )
                 }
-                Selected rover: { rover.charAt(0).toUpperCase() + rover.slice(1) }
+
+                <p>Selected rover: { rover.charAt(0).toUpperCase() + rover.slice(1) }</p>
+
                 {
                     query.query === "latest_photos" 
-                    ? <p>You are looking at the latest photos of the rover.</p>
+                    ? (
+                        <>
+                            <p>You are looking at the latest photos of the rover.</p>
+
+                            <table>
+                                <tr>
+                                    <th>Sol</th>
+                                    <th>Results</th>
+                                </tr>
+                                <tr>
+                                    <td>{ latestSolByRover ? latestSolByRover : "N/A" }</td>
+                                    <td>{ dataRetrieved ? dataRetrieved.length : "0" }</td>
+                                </tr>
+                            </table>
+                        </>
+                    )
                     : (
                         <>
-                        <p>You are looking at every photo that matches the query: </p>
-                        <p>Camera: { query.camera ? query.camera : "No info" }</p>
-                        <p>Sol: { query.sol ? query.sol : "No info" }</p>
-                        <p>Earth date: { query.earth_date ? query.earth_date : "No info" }</p>
-                        <p>Page number: { pagination }</p>
-                        <p>Total results for this query: { dataRetrieved ? dataRetrieved.length : "0" }</p>
+                            <p>You are looking at every photo that matches the query: </p>
+
+                            <table>
+                                <tr>
+                                    <th>Cam</th>
+                                    <th>Sol</th>
+                                    <th>Date</th>
+                                    <th>Results</th>
+                                </tr>
+                                <tr>
+                                    <td>{ query.camera ? query.camera : "N/A" }</td>
+                                    <td>{ query.sol ? query.sol : "N/A" }</td>
+                                    <td>{ query.earth_date ? query.earth_date : "N/A" }</td>
+                                    <td>{ dataRetrieved ? dataRetrieved.length : "0" }</td>
+                                </tr>
+                            </table>
                         </>
                     )
                 }
             </div>
 
-            <div className="btn-container">
+            <h2>Filters</h2>
+            <div>
                 <p><strong>Choose a rover</strong></p>
-
-                <Button
-                    handleClick={ () => changeRover( "curiosity" ) }
-                    text="Curiosity"
-                />
-                <Button
-                    handleClick={ () => changeRover( "opportunity" ) }
-                    text="Opportunity"
-                />
-                <Button
-                    handleClick={ () => changeRover( "spirit" ) }
-                    text="Spirit"
-                />
+                
+                <select name="rover" id="rover"
+                    onChange={ ( event ) => changeRover( event.target.value ) }
+                >
+                    <option value="curiosity">Curiosity</option>
+                    <option value="opportunity">Opportunity</option>
+                    <option value="spirit">Spirit</option>
+                </select>
             </div>
 
-            <div className="btn-container">
+            <div>
                 <p><strong>Choose a camera</strong></p>
-                
-                {
-                    availableCameras.map(( item ) => {
-                        return (
-                            <Button
-                                handleClick={ () => changeQuery( {
-                                    camera: item
-                                } ) }
-                                text={ item }
-                            />
-                        );
-                    })
-                }
+
+                <select name="camera" id="camera"
+                    onChange={ ( event ) => changeQuery( {
+                        camera: event.target.value
+                    } ) }
+                >
+                    {
+                        availableCameras.map(( item ) => {
+                            return ( <option value={ item }>{ item }</option> );
+                        })
+                    }
+                </select>
             </div>
 
             <div className="date-input-container">
                 <p><strong>Choose a date</strong></p>
+
                 <p>Sol</p>
                 <input
                     type="number" name="sol" min="1"
@@ -169,6 +192,7 @@ const Filters = ( { pagination, dataRetrieved, setDataRetrieved, setPagination }
                         sol: event.target.value
                     } ) }
                 />
+
                 <p>Earth date</p>
                 <input
                     type="date" name="earth_date"

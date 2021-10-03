@@ -1,0 +1,8 @@
+.Filters table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.Filters table th, .Filters table td {
+    border: 1px solid black;
+}
